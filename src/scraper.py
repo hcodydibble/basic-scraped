@@ -1,5 +1,6 @@
 """A little baby data scrapper."""
 import requests
+from bs4 import BeautifulSoup
 
 
 URL = "http://info.kingcounty.gov/health/ehs/foodsafety/inspections/Results.aspx"
@@ -35,3 +36,8 @@ def load_inspection_page():
         content = f.read().encode('utf8')
         encoding = f.read()
         return content, encoding
+
+
+def parse_source(html):
+    """."""
+    return BeautifulSoup(html, "lxml")
