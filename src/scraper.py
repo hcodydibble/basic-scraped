@@ -62,7 +62,24 @@ def extract_data_listings(parsed):
     return parsed.find_all('div', id=content_id)
 
 
-def has_two_tds(div):
+def has_two_tds(elem):
+    """."""
+    tr = elem.name == "tr"
+    td = elem.find_all("td")
+    has_two = len(td) == 2
+    return tr and has_two
+
+
+def clean_data(cell):
+    """."""
+    clean_list = list(cell.stripped_strings)
+    if clean_list != []:
+        return "".join(clean_list).strip(" \n:-")
+    else:
+        return ""
+
+
+def extract_restaurant_metadata():
     """."""
     pass
 
@@ -77,5 +94,11 @@ if __name__ == "__main__":
         content, encoding = get_inspection_page(**kwargs)
     doc = parse_source(content)
     listings = extract_data_listings(doc)
-    print(len(listings))
-    print(listings[0].prettify())
+    for listing in listings:
+        metadata_rows = listing.find('tbody').find_all(
+            has_two_tds, recursive=False
+        )
+        for row in metadata_rows:
+            for td in row.find_all('td', recursive=False):
+                print(clean_data(td))
+        print()
