@@ -1,6 +1,7 @@
 """A little baby data scrapper."""
 import requests
 import sys
+import re
 from bs4 import BeautifulSoup
 
 
@@ -33,7 +34,7 @@ def get_inspection_page(**kwargs):
     new_params.update(kwargs)
     response = requests.get(URL, params=new_params)
     response.raise_for_status()
-    return response.content, response.encoding
+    return response.content
 
 
 def load_inspection_page():
@@ -54,14 +55,23 @@ def parse_source(content):
     parsed = BeautifulSoup(content, "lxml")
     return parsed
 
+
+def extract_data_listings(parsed):
+    """."""
+    content_id = re.compile(r'PR[\d]+~')
+    return parsed.find_all('div', id=content_id)
+
+
 if __name__ == "__main__":
     kwargs = {
-        "Zip_Code": "98116",
-        "City": "Seattle"
+        "Inspection_Start": "01/01/2015",
+        "Inspection_End": "01/01/2017"
     }
     if len(sys.argv) > 1 and sys.argv[1] == "test":
         content = load_inspection_page()
     else:
         content, encoding = get_inspection_page(**kwargs)
     doc = parse_source(content)
-    print(doc.prettify())
+    listings = extract_data_listings(doc)
+    print(len(listings))
+    print(listings[0].prettify())
