@@ -45,24 +45,23 @@ def load_inspection_page():
     of the HTML.
     """
     with open('inspection_page.html') as f:
-        content = f.read().encode('utf8')
-        encoding = 'utf8'
-        return content, encoding
+        content = f.read()
+        return content
 
 
-def parse_source(content, encoding='utf8'):
+def parse_source(content):
     """."""
-    parsed = BeautifulSoup(content, "lxml", from_encoding=encoding)
+    parsed = BeautifulSoup(content, "lxml")
     return parsed
 
-
-# if __name__ == "__main__":
-#     kwargs = {
-#         "Zip_Code": "98116",
-#         "City": "Seattle"
-#     }
-#     if len(sys.argv) > 1 and sys.argv[1] == "test":
-#         content, encoding = load_inspection_page()
-#     else:
-#         content, encoding = get_inspection_page(**kwargs)
-#     doc = parse_source(content)
+if __name__ == "__main__":
+    kwargs = {
+        "Zip_Code": "98116",
+        "City": "Seattle"
+    }
+    if len(sys.argv) > 1 and sys.argv[1] == "test":
+        content = load_inspection_page()
+    else:
+        content, encoding = get_inspection_page(**kwargs)
+    doc = parse_source(content)
+    print(doc.prettify())
