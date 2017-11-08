@@ -62,6 +62,10 @@ def extract_data_listings(parsed):
     return parsed.find_all('div', id=content_id)
 
 
+def has_two_tds(div):
+    """."""
+    pass
+
 if __name__ == "__main__":
     kwargs = {
         "Inspection_Start": "01/01/2015",
